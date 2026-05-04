@@ -79,7 +79,7 @@
         .totals {
             width: 46%;
             margin-left: auto;
-            margin-top: 0;
+            margin-top: 8px;
             border-collapse: collapse;
         }
         .totals td {
@@ -167,6 +167,12 @@
         </tbody>
     </table>
 
+    <table class="totals">
+        <tr><td class="label-cell">Total HT</td><td class="num">{{totalHt}} €</td></tr>
+        <tr><td class="label-cell">TVA (20%)</td><td class="num">{{vatAmount}} €</td></tr>
+        <tr><td class="label-cell grand-total">Total TTC</td><td class="num grand-total">{{totalTtc}} €</td></tr>
+    </table>
+
     <div class="bottom">
         <div class="payment">
             <h4>Conditions de paiement</h4>
@@ -184,11 +190,6 @@
             </div>
         </div>
 
-        <table class="totals">
-            <tr><td class="label-cell">Total HT</td><td class="num">{{totalHt}} €</td></tr>
-            <tr><td class="label-cell">TVA (20%)</td><td class="num">{{vatAmount}} €</td></tr>
-            <tr><td class="label-cell grand-total">Total TTC</td><td class="num grand-total">{{totalTtc}} €</td></tr>
-        </table>
     </div>
 </body>
 </html>
