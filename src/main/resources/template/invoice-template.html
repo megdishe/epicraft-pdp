@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #1f2937;
+            margin: 30px;
+        }
+        .header {
+            display: block;
+            margin-bottom: 30px;
+        }
+        .title {
+            font-size: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+        .columns {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        .columns td {
+            vertical-align: top;
+            width: 50%;
+            padding-right: 16px;
+        }
+        .meta {
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+        .label {
+            color: #6b7280;
+            font-weight: bold;
+            display: inline-block;
+            width: 115px;
+        }
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .items th {
+            background: #e2e8f0;
+            border: 1px solid #cbd5e1;
+            padding: 10px 8px;
+            text-align: left;
+        }
+        .items td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 8px;
+        }
+        .num { text-align: right; }
+        .totals {
+            width: 45%;
+            margin-left: auto;
+            margin-top: 16px;
+            border-collapse: collapse;
+        }
+        .totals td {
+            border: 1px solid #cbd5e1;
+            padding: 8px;
+        }
+        .totals .label-cell {
+            background: #f8fafc;
+            font-weight: bold;
+        }
+        .totals .grand-total {
+            background: #dbeafe;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .footer {
+            margin-top: 30px;
+            color: #374151;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="title">Facture</div>
+    <div class="meta"><span class="label">Numéro :</span> {{invoiceNumber}}</div>
+    <div class="meta"><span class="label">Date d'émission :</span> {{issueDate}}</div>
+    <div class="meta"><span class="label">Échéance :</span> {{dueDate}}</div>
+    <div class="meta"><span class="label">Période :</span> {{periodLabel}}</div>
+</div>
+
+<table class="columns">
+    <tr>
+        <td>
+            <strong>Prestataire</strong><br/>
+            {{companyName}}<br/>
+            {{companyAddress}}<br/>
+            {{companyPostalCode}} {{companyCity}}<br/>
+            {{companyCountry}}<br/>
+            SIRET : {{companySiret}}<br/>
+            TVA : {{companyVat}}<br/>
+            Email : {{companyEmail}}
+        </td>
+        <td>
+            <strong>Client</strong><br/>
+            {{clientName}}<br/>
+            {{clientAddress}}<br/>
+            {{clientPostalCode}} {{clientCity}}<br/>
+            {{clientCountry}}
+        </td>
+    </tr>
+</table>
+
+<table class="items">
+    <thead>
+    <tr>
+        <th>Description</th>
+        <th class="num">Qté</th>
+        <th class="num">Prix unitaire HT</th>
+        <th class="num">Total HT</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{lineItems}}
+    </tbody>
+</table>
+
+<table class="totals">
+    <tr><td class="label-cell">Total HT</td><td class="num">{{totalHt}} €</td></tr>
+    <tr><td class="label-cell">TVA ({{vatRate}} %)</td><td class="num">{{vatAmount}} €</td></tr>
+    <tr><td class="label-cell grand-total">Total TTC</td><td class="num grand-total">{{totalTtc}} €</td></tr>
+</table>
+
+<div class="footer">
+    Paiement à 45 jours fin de mois. Merci pour votre confiance.
+</div>
+</body>
+</html>
