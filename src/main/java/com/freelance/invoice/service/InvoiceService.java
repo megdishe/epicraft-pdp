@@ -27,6 +27,9 @@ public class InvoiceService {
             LocalDate issueDate,
             int paymentDelayDays
     ) {
+        Party normalizedCompany = Party.withDefaults(company, Party.defaultCompany());
+        Party normalizedClient = Party.withDefaults(client, Party.defaultClient());
+
         BigDecimal quantity = BigDecimal.valueOf(workedDays);
         BigDecimal totalHt = DAILY_RATE.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
         BigDecimal vatAmount = totalHt.multiply(VAT_RATE).setScale(2, RoundingMode.HALF_UP);
@@ -44,8 +47,8 @@ public class InvoiceService {
                 issueDate,
                 issueDate.plusDays(paymentDelayDays),
                 periodLabel,
-                company,
-                client,
+                normalizedCompany,
+                normalizedClient,
                 List.of(line),
                 totalHt,
                 VAT_RATE,
