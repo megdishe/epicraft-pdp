@@ -36,7 +36,7 @@ public class InvoiceService {
         BigDecimal totalTtc = totalHt.add(vatAmount).setScale(2, RoundingMode.HALF_UP);
 
         InvoiceLine line = new InvoiceLine(
-                "Prestation de services IT (mission Banque de France)" + periodLabel,
+                "Prestation de services IT (mission Banque de France) " + periodLabel,
                 quantity,
                 DAILY_RATE,
                 totalHt
