@@ -1,0 +1,3 @@
+[submodule "invoice-api"]
+	path = invoice-api
+	url = ../invoice-api-src
