@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class PdfService {
     public void generatePdf(String html, Path outputPath) {
         try (FileOutputStream os = new FileOutputStream(outputPath.toFile())) {
