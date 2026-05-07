@@ -1,7 +1,7 @@
-package com.freelance.invoice.controller;
+package com.epicraft.pdp.invoice.controller;
 
-import com.freelance.invoice.domain.Customer;
-import com.freelance.invoice.repository.CustomerRepository;
+import com.epicraft.pdp.invoice.domain.Customer;
+import com.epicraft.pdp.invoice.repository.CustomerRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

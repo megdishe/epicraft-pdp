@@ -1,11 +1,11 @@
-package com.freelance.invoice.service;
+package com.epicraft.pdp.invoice.service;
 
-import com.freelance.invoice.domain.*;
-import com.freelance.invoice.dto.CreateInvoiceRequest;
-import com.freelance.invoice.repository.CompanyRepository;
-import com.freelance.invoice.repository.CustomerRepository;
-import com.freelance.invoice.repository.InvoiceRepository;
-import com.freelance.invoice.template.InvoiceHtmlRenderer;
+import com.epicraft.pdp.invoice.domain.*;
+import com.epicraft.pdp.invoice.dto.CreateInvoiceRequest;
+import com.epicraft.pdp.invoice.repository.CompanyRepository;
+import com.epicraft.pdp.invoice.repository.CustomerRepository;
+import com.epicraft.pdp.invoice.repository.InvoiceRepository;
+import com.epicraft.pdp.invoice.template.InvoiceHtmlRenderer;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

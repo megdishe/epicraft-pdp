@@ -1,4 +1,4 @@
-package com.freelance.invoice.template;
+package com.epicraft.pdp.invoice.template;
 
 import java.io.IOException;
 import java.io.InputStream;

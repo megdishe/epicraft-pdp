@@ -1,7 +1,7 @@
-package com.freelance.invoice.template;
+package com.epicraft.pdp.invoice.template;
 
-import com.freelance.invoice.domain.Invoice;
-import com.freelance.invoice.domain.InvoiceLine;
+import com.epicraft.pdp.invoice.domain.Invoice;
+import com.epicraft.pdp.invoice.domain.InvoiceLine;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;

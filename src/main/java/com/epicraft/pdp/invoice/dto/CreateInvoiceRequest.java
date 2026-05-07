@@ -1,4 +1,4 @@
-package com.freelance.invoice.dto;
+package com.epicraft.pdp.invoice.dto;
 
 import java.time.LocalDate;
 

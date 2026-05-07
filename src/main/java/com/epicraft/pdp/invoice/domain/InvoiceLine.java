@@ -1,4 +1,4 @@
-package com.freelance.invoice.domain;
+package com.epicraft.pdp.invoice.domain;
 
 import java.math.BigDecimal;
 

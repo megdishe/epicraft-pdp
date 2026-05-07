@@ -1,4 +1,4 @@
-package com.freelance.invoice.domain;
+package com.epicraft.pdp.invoice.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

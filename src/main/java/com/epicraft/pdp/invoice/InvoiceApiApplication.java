@@ -1,4 +1,4 @@
-package com.freelance.invoice;
+package com.epicraft.pdp.invoice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
