@@ -1,0 +1,60 @@
+<main>
+  <h1>Invoice Manager (Angular 20)</h1>
+  <p class="status">{{ status }}</p>
+
+  <section>
+    <h2>Create company</h2>
+    <form class="grid" (ngSubmit)="createCompany()">
+      <input [(ngModel)]="companyForm.name" name="companyName" required placeholder="name"/>
+      <input [(ngModel)]="companyForm.address" name="companyAddress" required placeholder="address"/>
+      <input [(ngModel)]="companyForm.email" name="companyEmail" required placeholder="email"/>
+      <input [(ngModel)]="companyForm.phone" name="companyPhone" required placeholder="phone"/>
+      <input [(ngModel)]="companyForm.taxId" name="companyTaxId" required placeholder="taxId"/>
+      <input [(ngModel)]="companyForm.bankName" name="bankName" required placeholder="bankName"/>
+      <input [(ngModel)]="companyForm.iban" name="iban" required placeholder="iban"/>
+      <input [(ngModel)]="companyForm.bic" name="bic" required placeholder="bic"/>
+      <input [(ngModel)]="companyForm.accountHolder" name="accountHolder" required placeholder="accountHolder"/>
+      <button type="submit">Create company</button>
+    </form>
+  </section>
+</main>
+<section>
+  <h2>Create customer</h2>
+  <form class="grid" (ngSubmit)="createCustomer()">
+    <input [(ngModel)]="customerForm.name" name="customerName" required placeholder="name"/>
+    <input [(ngModel)]="customerForm.address" name="customerAddress" required placeholder="address"/>
+    <input [(ngModel)]="customerForm.email" name="customerEmail" required placeholder="email"/>
+    <input [(ngModel)]="customerForm.phone" name="customerPhone" required placeholder="phone"/>
+    <input [(ngModel)]="customerForm.taxId" name="customerTaxId" required placeholder="taxId"/>
+    <button type="submit">Create customer</button>
+  </form>
+</section>
+
+<section>
+  <h2>Create invoice</h2>
+  <form class="grid" (ngSubmit)="createInvoice()">
+    <select [(ngModel)]="invoiceForm.companyId" name="invoiceCompany" required>
+      <option value="">Select company</option>
+      <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+    </select>
+    <select [(ngModel)]="invoiceForm.customerId" name="invoiceCustomer" required>
+      <option value="">Select customer</option>
+      <option *ngFor="let c of customers" [value]="c.id">{{ c.name }}</option>
+    </select>
+    <input [(ngModel)]="invoiceForm.periodLabel" name="periodLabel" required placeholder="period label"/>
+    <input [(ngModel)]="invoiceForm.workedDays" name="workedDays" required type="number" min="1" placeholder="worked days"/>
+    <input [(ngModel)]="invoiceForm.issueDate" name="issueDate" required type="date"/>
+    <input [(ngModel)]="invoiceForm.paymentDelayDays" name="paymentDelay" required type="number" min="0" placeholder="payment delay days"/>
+    <input [(ngModel)]="invoiceForm.templateName" name="templateName" required placeholder="template name"/>
+    <button type="submit">Create invoice</button>
+  </form>
+</section>
+
+<section>
+  <h2>Data overview</h2>
+  <div class="cards">
+    <article><h3>Companies ({{ companies.length }})</h3><ul><li *ngFor="let c of companies">{{ c.name }}</li></ul></article>
+    <article><h3>Customers ({{ customers.length }})</h3><ul><li *ngFor="let c of customers">{{ c.name }}</li></ul></article>
+    <article><h3>Invoices ({{ invoices.length }})</h3><ul><li *ngFor="let i of invoices">{{ i.invoiceNumber }} - {{ i.totalTtc }}</li></ul></article>
+  </div>
+</section>

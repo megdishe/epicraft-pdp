@@ -2,7 +2,7 @@
 
 Monorepo for invoice management with:
 - `invoice-api`: Spring Boot + MongoDB backend
-- `invoice-front`: Angular frontend (git submodule)
+- `invoice-front`: Angular 20 frontend
 
 ## Project structure
 
@@ -24,8 +24,3 @@ Services:
 
 ## Development notes
 
-When cloning the repository, initialize submodules before working with the frontend:
-
-```bash
-git submodule update --init --recursive
-```
