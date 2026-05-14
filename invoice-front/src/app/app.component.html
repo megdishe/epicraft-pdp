@@ -51,10 +51,28 @@
 </section>
 
 <section>
+  <h2>Use legacy endpoint</h2>
+  <form class="grid" (ngSubmit)="createLegacyInvoice()">
+    <input [(ngModel)]="legacyInvoiceForm.month" name="legacyMonth" required type="number" min="1" max="12" placeholder="month"/>
+    <input [(ngModel)]="legacyInvoiceForm.year" name="legacyYear" required type="number" min="2000" placeholder="year"/>
+    <input [(ngModel)]="legacyInvoiceForm.numberOfDays" name="legacyNumberOfDays" required type="number" min="1" placeholder="number of days"/>
+    <button type="submit">Create legacy invoice</button>
+  </form>
+</section>
+
+<section>
   <h2>Data overview</h2>
   <div class="cards">
     <article><h3>Companies ({{ companies.length }})</h3><ul><li *ngFor="let c of companies">{{ c.name }}</li></ul></article>
     <article><h3>Customers ({{ customers.length }})</h3><ul><li *ngFor="let c of customers">{{ c.name }}</li></ul></article>
-    <article><h3>Invoices ({{ invoices.length }})</h3><ul><li *ngFor="let i of invoices">{{ i.invoiceNumber }} - {{ i.totalTtc }}</li></ul></article>
+    <article>
+      <h3>Invoices ({{ invoices.length }})</h3>
+      <ul>
+        <li *ngFor="let i of invoices">
+          {{ i.invoiceNumber }} - {{ i.totalTtc }}
+          <a *ngIf="i.pdfPath" [href]="getInvoiceDownloadLink(i)" [attr.download]="i.invoiceNumber + '.pdf'">Download PDF</a>
+        </li>
+      </ul>
+    </article>
   </div>
 </section>

@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   companyForm = { name: '', address: '', email: '', phone: '', taxId: '', bankName: '', iban: '', bic: '', accountHolder: '' };
   customerForm = { name: '', address: '', email: '', phone: '', taxId: '' };
   invoiceForm = { companyId: '', customerId: '', periodLabel: '', workedDays: 20, issueDate: '', paymentDelayDays: 30, templateName: 'invoice-template' };
+  legacyInvoiceForm = { month: new Date().getMonth() + 1, year: new Date().getFullYear(), numberOfDays: 20 };
 
   ngOnInit(): void { this.loadAll(); }
 
@@ -53,5 +54,23 @@ export class AppComponent implements OnInit {
 
   createInvoice(): void {
     this.http.post(`${this.apiBase}/api/invoices`, this.invoiceForm).subscribe({ next: () => this.loadAll(), error: (err) => this.status = `Invoice creation failed: ${err.message}` });
+  }
+
+  createLegacyInvoice(): void {
+    const { month, year, numberOfDays } = this.legacyInvoiceForm;
+    this.http.post(`${this.apiBase}/api/invoices/temporary/legacy?month=${month}&year=${year}&numberOfDays=${numberOfDays}`, {}).subscribe({
+      next: () => {
+        this.status = 'Legacy invoice created';
+        this.loadAll();
+      },
+      error: (err) => this.status = `Legacy invoice creation failed: ${err.message}`
+    });
+  }
+
+  getInvoiceDownloadLink(invoice: any): string {
+    const path = invoice?.pdfPath;
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
+    return `/${path}`;
   }
 }
