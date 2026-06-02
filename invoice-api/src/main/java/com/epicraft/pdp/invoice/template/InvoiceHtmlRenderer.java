@@ -28,11 +28,11 @@ public class InvoiceHtmlRenderer {
                 .replace("{{dueDate}}", invoice.dueDate().format(DATE_FORMATTER))
                 .replace("{{periodLabel}}", escape(invoice.periodLabel()))
                 .replace("{{companyName}}", escape(invoice.company().name()))
-                .replace("{{companyAddress}}", escape(invoice.company().address()))
+                .replace("{{companyAddress}}", escapeMultiline(invoice.company().address()))
                 .replace("{{companySiret}}", escape(invoice.company().siret()))
                 .replace("{{companyVat}}", escape(invoice.company().taxId()))
                 .replace("{{clientName}}", escape(invoice.customer().name()))
-                .replace("{{clientAddress}}", escape(invoice.customer().address()))
+                .replace("{{clientAddress}}", escapeMultiline(invoice.customer().address()))
                 .replace("{{clientSiret}}", escape(invoice.customer().siret()))
                 .replace("{{clientVat}}", escape(invoice.customer().taxId()))
                 .replace("{{companyIban}}", escape(invoice.company().bankDetails() == null ? "" : invoice.company().bankDetails().iban()))
@@ -46,4 +46,5 @@ public class InvoiceHtmlRenderer {
     private static String formatCurrency(java.math.BigDecimal value) { DecimalFormatSymbols s = new DecimalFormatSymbols(Locale.FRANCE); s.setGroupingSeparator(' '); s.setDecimalSeparator(','); return new DecimalFormat("#,##0.00", s).format(value);}    
     private static String formatNumber(java.math.BigDecimal value) { DecimalFormatSymbols s = new DecimalFormatSymbols(Locale.FRANCE); s.setDecimalSeparator(','); return new DecimalFormat("0.##", s).format(value);}    
     private static String escape(String value) { return value == null ? "" : value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;"); }
+    private static String escapeMultiline(String value) { return escape(value).replace("\r\n", "\n").replace("\r", "\n").replace("\n", "<br/>"); }
 }
