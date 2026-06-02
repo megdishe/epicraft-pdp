@@ -13,6 +13,6 @@ public class CompanyController {
     @PostMapping public Company create(@RequestBody Company company) { return repository.save(company); }
     @GetMapping public List<Company> findAll() { return repository.findAll(); }
     @GetMapping("/{id}") public Company findById(@PathVariable String id) { return repository.findById(id).orElseThrow(); }
-    @PutMapping("/{id}") public Company update(@PathVariable String id, @RequestBody Company company) { return repository.save(new Company(id, company.name(), company.address(), company.email(), company.phone(), company.taxId(), company.bankDetails())); }
+   // @PutMapping("/{id}") public Company update(@PathVariable String id, @RequestBody Company company) { return repository.save(new Company(id, company.name(), company.address(), company.email(), company.phone(), company.taxId(), company.bankDetails())); }
     @DeleteMapping("/{id}") public void delete(@PathVariable String id) { repository.deleteById(id); }
 }
