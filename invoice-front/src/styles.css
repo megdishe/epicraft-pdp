@@ -9,3 +9,8 @@ button:hover { background: #1e40af; }
 .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .status { background: #dbeafe; border-left: 4px solid #1d4ed8; padding: 8px; }
 ul { margin: 0; padding-left: 16px; }
+.invoice-lines { grid-column: 1 / -1; display: grid; gap: 8px; }
+.invoice-lines h3 { margin: 8px 0 0; }
+.invoice-line { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; }
+button:disabled { background: #94a3b8; cursor: not-allowed; }
+@media (max-width: 720px) { .invoice-line { grid-template-columns: 1fr; } }

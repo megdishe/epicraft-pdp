@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
   companyForm = { name: '', address: '', email: '', phone: '', taxId: '', bankName: '', iban: '', bic: '', accountHolder: '' };
   customerForm = { name: '', address: '', email: '', phone: '', taxId: '' };
-  invoiceForm = { companyId: '', customerId: '', periodLabel: '', workedDays: 20, issueDate: '', paymentDelayDays: 30, templateName: 'invoice-template' };
+  invoiceForm = { companyId: '', customerId: '', periodLabel: '', workedDays: 20, issueDate: '', paymentDelayDays: 30, templateName: 'invoice-template', lines: [this.createInvoiceLine()] };
   legacyInvoiceForm = { month: new Date().getMonth() + 1, year: new Date().getFullYear(), numberOfDays: 20 };
 
   ngOnInit(): void { this.loadAll(); }
@@ -52,8 +52,32 @@ export class AppComponent implements OnInit {
     this.http.post(`${this.apiBase}/api/customers`, this.customerForm).subscribe({ next: () => this.loadAll(), error: (err) => this.status = `Customer creation failed: ${err.message}` });
   }
 
+  createInvoiceLine() {
+    return { description: '', quantity: 1, unitPrice: 610 };
+  }
+
+  addInvoiceLine(): void {
+    this.invoiceForm.lines.push(this.createInvoiceLine());
+  }
+
+  removeInvoiceLine(index: number): void {
+    if (this.invoiceForm.lines.length > 1) {
+      this.invoiceForm.lines.splice(index, 1);
+    }
+  }
+
   createInvoice(): void {
-    this.http.post(`${this.apiBase}/api/invoices`, this.invoiceForm).subscribe({ next: () => this.loadAll(), error: (err) => this.status = `Invoice creation failed: ${err.message}` });
+    const body = {
+      ...this.invoiceForm,
+      lines: this.invoiceForm.lines
+        .filter((line) => line.description.trim())
+        .map((line) => ({
+          description: line.description.trim(),
+          quantity: Number(line.quantity),
+          unitPrice: Number(line.unitPrice)
+        }))
+    };
+    this.http.post(`${this.apiBase}/api/invoices`, body).subscribe({ next: () => this.loadAll(), error: (err) => this.status = `Invoice creation failed: ${err.message}` });
   }
 
   createLegacyInvoice(): void {
