@@ -27,6 +27,16 @@ The backend container connects to MongoDB with the Compose service hostname
 Docker Compose, keep using `mongodb://localhost:27017/invoice_api` instead;
 `mongodb` only resolves inside the Compose network.
 
+If MongoDB exits immediately with `exec format error`, Docker is using an
+incompatible cached image for your machine. The Compose file pins MongoDB to
+`linux/amd64` and pulls the image on each `docker compose up`; you can also
+refresh it manually with:
+
+```bash
+docker compose pull mongodb
+docker compose up --force-recreate mongodb
+```
+
 
 ### Docker BuildKit storage error
 
