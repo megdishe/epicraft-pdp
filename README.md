@@ -22,6 +22,11 @@ Services:
 - API (direct access): `http://localhost:8080`
 - MongoDB: `mongodb://localhost:27017`
 
+The backend container connects to MongoDB with the Compose service hostname
+`mongodb` on the shared `invoice-net` network. If you run the API outside
+Docker Compose, keep using `mongodb://localhost:27017/invoice_api` instead;
+`mongodb` only resolves inside the Compose network.
+
 
 ### Docker BuildKit storage error
 
