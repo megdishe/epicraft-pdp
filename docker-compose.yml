@@ -11,11 +11,11 @@ services:
       - mongo_data:/data/db
       - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok", "mongodb://localhost:27017/invoice_api"]
+      test: ["CMD-SHELL", "mongosh --quiet mongodb://localhost:27017/invoice_api --eval \"db.adminCommand('ping').ok\" | grep -q 1"]
       interval: 10s
       timeout: 5s
-      retries: 10
-      start_period: 10s
+      retries: 12
+      start_period: 30s
     networks:
       invoice-net:
         aliases:
