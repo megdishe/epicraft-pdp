@@ -42,10 +42,22 @@
       <option *ngFor="let c of customers" [value]="c.id">{{ c.name }}</option>
     </select>
     <input [(ngModel)]="invoiceForm.periodLabel" name="periodLabel" required placeholder="period label"/>
-    <input [(ngModel)]="invoiceForm.workedDays" name="workedDays" required type="number" min="1" placeholder="worked days"/>
+    <input [(ngModel)]="invoiceForm.workedDays" name="workedDays" required type="number" min="1" placeholder="worked days (fallback)"/>
     <input [(ngModel)]="invoiceForm.issueDate" name="issueDate" required type="date"/>
     <input [(ngModel)]="invoiceForm.paymentDelayDays" name="paymentDelay" required type="number" min="0" placeholder="payment delay days"/>
     <input [(ngModel)]="invoiceForm.templateName" name="templateName" required placeholder="template name"/>
+
+    <div class="invoice-lines">
+      <h3>Invoice lines</h3>
+      <div class="invoice-line" *ngFor="let line of invoiceForm.lines; let idx = index">
+        <input [(ngModel)]="line.description" [name]="'lineDescription' + idx" required placeholder="line description"/>
+        <input [(ngModel)]="line.quantity" [name]="'lineQuantity' + idx" required type="number" min="0.01" step="0.01" placeholder="quantity"/>
+        <input [(ngModel)]="line.unitPrice" [name]="'lineUnitPrice' + idx" required type="number" min="0" step="0.01" placeholder="unit price"/>
+        <button type="button" (click)="removeInvoiceLine(idx)" [disabled]="invoiceForm.lines.length === 1">Remove</button>
+      </div>
+      <button type="button" (click)="addInvoiceLine()">Add invoice line</button>
+    </div>
+
     <button type="submit">Create invoice</button>
   </form>
 </section>
@@ -70,6 +82,9 @@
       <ul>
         <li *ngFor="let i of invoices">
           {{ i.invoiceNumber }} - {{ i.totalTtc }}
+          <ul *ngIf="i.lines?.length">
+            <li *ngFor="let line of i.lines">{{ line.description }} — {{ line.quantity }} x {{ line.unitPrice }}</li>
+          </ul>
           <a *ngIf="i.pdfPath" [href]="getInvoiceDownloadLink(i)" [attr.download]="i.invoiceNumber + '.pdf'">Download PDF</a>
         </li>
       </ul>

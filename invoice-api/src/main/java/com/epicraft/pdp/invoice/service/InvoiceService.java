@@ -39,14 +39,14 @@ public class InvoiceService {
                 "75001 PARIS", "", "", "FR64381158575","38115857500070");
         String template = request.templateName() == null || request.templateName().isBlank() ? "default" : request.templateName();
 
-        BigDecimal quantity = BigDecimal.valueOf(request.workedDays());
-        BigDecimal totalHt = DAILY_RATE.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
+        List<InvoiceLine> lines = buildInvoiceLines(request);
+        BigDecimal totalHt = calculateTotalHt(lines);
         BigDecimal vatAmount = totalHt.multiply(VAT_RATE).setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalTtc = totalHt.add(vatAmount).setScale(2, RoundingMode.HALF_UP);
         String invoiceNumber = String.format("F-%d-%04d", Year.now().getValue(), sequence.incrementAndGet());
 
         Invoice invoice = new Invoice(null, invoiceNumber, template, request.issueDate(), request.issueDate().plusDays(request.paymentDelayDays()), request.periodLabel(), company, customer,
-                List.of(new InvoiceLine("Prestation de services IT (mission Banque de France) " + request.periodLabel(), quantity, DAILY_RATE, totalHt)), totalHt, VAT_RATE, vatAmount, totalTtc, null);
+                lines, totalHt, VAT_RATE, vatAmount, totalTtc, null);
 
         Path output = resolveInvoiceOutputPath(invoice.invoiceNumber());
         pdfService.generatePdf(renderer.render(invoice), output);
@@ -59,14 +59,14 @@ public class InvoiceService {
         Customer customer = customerRepository.findById(request.customerId()).orElseThrow();
         String template = request.templateName() == null || request.templateName().isBlank() ? "default" : request.templateName();
 
-        BigDecimal quantity = BigDecimal.valueOf(request.workedDays());
-        BigDecimal totalHt = DAILY_RATE.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
+        List<InvoiceLine> lines = buildInvoiceLines(request);
+        BigDecimal totalHt = calculateTotalHt(lines);
         BigDecimal vatAmount = totalHt.multiply(VAT_RATE).setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalTtc = totalHt.add(vatAmount).setScale(2, RoundingMode.HALF_UP);
         String invoiceNumber = String.format("F-%d-%04d", Year.now().getValue(), sequence.incrementAndGet());
 
         Invoice invoice = new Invoice(null, invoiceNumber, template, request.issueDate(), request.issueDate().plusDays(request.paymentDelayDays()), request.periodLabel(), company, customer,
-                List.of(new InvoiceLine("Prestation de services IT (mission Banque de France) " + request.periodLabel(), quantity, DAILY_RATE, totalHt)), totalHt, VAT_RATE, vatAmount, totalTtc, null);
+                lines, totalHt, VAT_RATE, vatAmount, totalTtc, null);
 
         Path output = resolveInvoiceOutputPath(invoice.invoiceNumber());
         pdfService.generatePdf(renderer.render(invoice), output);
@@ -86,11 +86,45 @@ public class InvoiceService {
                 numberOfDays,
                 java.time.LocalDate.of(year, month, java.time.Month.of(month).length(java.time.Year.isLeap(year))),
                 45,
-                "default"
+                "default",
+                null
         );
 
         return generateLegacy(request);
     }
+    private List<InvoiceLine> buildInvoiceLines(CreateInvoiceRequest request) {
+        if (request.lines() == null || request.lines().isEmpty()) {
+            BigDecimal quantity = BigDecimal.valueOf(request.workedDays());
+            BigDecimal total = DAILY_RATE.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
+            return List.of(new InvoiceLine("Prestation de services IT (mission Banque de France) " + request.periodLabel(), quantity, DAILY_RATE, total));
+        }
+
+        return request.lines().stream()
+                .map(line -> {
+                    if (line.description() == null || line.description().isBlank()) {
+                        throw new IllegalArgumentException("Invoice line description is required");
+                    }
+                    if (line.quantity() == null || line.quantity().compareTo(BigDecimal.ZERO) <= 0) {
+                        throw new IllegalArgumentException("Invoice line quantity must be greater than zero");
+                    }
+                    if (line.unitPrice() == null || line.unitPrice().compareTo(BigDecimal.ZERO) < 0) {
+                        throw new IllegalArgumentException("Invoice line unit price must be zero or greater");
+                    }
+                    BigDecimal quantity = line.quantity().setScale(2, RoundingMode.HALF_UP);
+                    BigDecimal unitPrice = line.unitPrice().setScale(2, RoundingMode.HALF_UP);
+                    BigDecimal total = unitPrice.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
+                    return new InvoiceLine(line.description(), quantity, unitPrice, total);
+                })
+                .toList();
+    }
+
+    private BigDecimal calculateTotalHt(List<InvoiceLine> lines) {
+        return lines.stream()
+                .map(InvoiceLine::total)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
     private Path resolveInvoiceOutputPath(String invoiceName) {
         try { Files.createDirectories(Path.of("invoices")); } catch (Exception e) { throw new IllegalStateException(e); }
         Path c = Path.of("invoices", invoiceName + ".pdf"); int i=1; while (Files.exists(c)) { c = Path.of("invoices", invoiceName + "-" + i++ + ".pdf"); } return c;
