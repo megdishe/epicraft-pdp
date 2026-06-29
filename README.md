@@ -22,5 +22,30 @@ Services:
 - API (direct access): `http://localhost:8080`
 - MongoDB: `mongodb://localhost:27017`
 
+
+### Docker BuildKit storage error
+
+If Docker Compose fails while building `invoice-front` with an error similar to:
+
+```text
+target invoice-front: failed to solve: error committing ... metadata_v2.db: read-only file system
+```
+
+that message comes from Docker BuildKit writing to Docker's host-side storage
+(`/var/lib/docker/buildkit/...`), not from the Angular app or this Dockerfile.
+The usual fix is to restore Docker's writable storage and then rerun the build:
+
+```bash
+docker info
+sudo mount -o remount,rw /var/lib/docker  # only if /var/lib/docker is mounted read-only
+sudo systemctl restart docker             # Linux hosts with systemd
+docker builder prune --filter type=exec.cachemount
+COMPOSE_BAKE=false docker compose build --no-cache invoice-front
+```
+
+On Docker Desktop, restart Docker Desktop and run **Troubleshoot → Clean / Purge
+data** if the BuildKit store remains read-only or corrupted. After Docker is
+healthy, rebuild the stack with `docker compose up --build`.
+
 ## Development notes
 
