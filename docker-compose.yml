@@ -1,57 +1,39 @@
 services:
   mongodb:
     image: mongo:7
-    platform: linux/amd64
     container_name: invoice-mongodb
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_DATABASE: invoice_api
+    restart: always
     volumes:
       - mongo_data:/data/db
       - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    healthcheck:
-      test: ["CMD-SHELL", "mongosh --quiet mongodb://localhost:27017/invoice_api --eval \"db.adminCommand('ping').ok\" | grep -q 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 30s
-    networks:
-      invoice-net:
-        aliases:
-          - mongodb
 
   invoice-api:
     build:
       context: ./invoice-api
     container_name: invoice-api
     depends_on:
-      mongodb:
-        condition: service_healthy
+      - mongodb
     ports:
       - "8080:8080"
     environment:
       MONGODB_URI: mongodb://mongodb:27017/invoice_api
       SERVER_PORT: 8080
-    networks:
-      invoice-net:
-        aliases:
-          - invoice-api
 
   invoice-front:
-    build:
-      context: ./invoice-front
+    image: node:22-alpine
     container_name: invoice-front
+    working_dir: /app
     depends_on:
       - invoice-api
     ports:
-      - "4200:80"
-    networks:
-      - invoice-net
+      - "4200:4200"
+    volumes:
+      - ./invoice-front:/app
+    command: sh -c "npm install && npm start -- --host 0.0.0.0 --port 4200"
 
 volumes:
   mongo_data:
-
-networks:
-  invoice-net:
-    driver: bridge
